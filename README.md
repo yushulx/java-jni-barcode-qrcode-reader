@@ -28,7 +28,38 @@ Copy OS-dependent shared libraries to `jni/platforms` folder.
     - `libDynamsoftBarcodeReader.dylib`
 
 
-## Build the JNI Shared Library
+## Build the JNI Shared Library with CMake
+Install [CMake](https://cmake.org/download/).
+
+Edit `CMakeLists.txt`. Replace Java include and lib directories with yours.
+
+```cmake
+if (CMAKE_HOST_WIN32)
+    set(WINDOWS 1)
+    set(JAVA_INCLUDE "C:/Program Files/Java/jdk1.8.0_181/include")
+    set(JAVA_INCLUDE_OS "C:/Program Files/Java/jdk1.8.0_181/include/win32")
+elseif(CMAKE_HOST_APPLE)
+    set(MACOS 1)
+    set(JAVA_INCLUDE "/System/Library/Frameworks/JavaVM.framework/Headers")
+    set(JAVA_INCLUDE_OS "")
+elseif(CMAKE_HOST_UNIX)
+    set(LINUX 1)
+    set(JAVA_INCLUDE "/usr/lib/jvm/java-1.8.0-openjdk-amd64/include/")
+    set(JAVA_INCLUDE_OS "/usr/lib/jvm/java-1.8.0-openjdk-amd64/include/linux")
+endif()
+
+if(WINDOWS)
+    link_directories("${PROJECT_SOURCE_DIR}/platforms/win" "C:/Program Files/Java/jdk1.8.0_181/lib") 
+    include_directories("${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/include" "${PROJECT_SOURCE_DIR}" "${JAVA_INCLUDE}" "${JAVA_INCLUDE_OS}")
+elseif(LINUX)
+    link_directories("${PROJECT_SOURCE_DIR}/platforms/linux") 
+    include_directories("${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/include" "${PROJECT_SOURCE_DIR}" "${JAVA_INCLUDE}" "${JAVA_INCLUDE_OS}")
+elseif(MACOS)
+    link_directories("${PROJECT_SOURCE_DIR}/platforms/macos") 
+    include_directories("${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/include" "${PROJECT_SOURCE_DIR}" "${JAVA_INCLUDE}")
+endif()
+```
+
 ### Windows
 E.g. Visual Studio 2017
 
@@ -49,6 +80,9 @@ cmake --build . --config Release --target install
 ```
 
 ## Build the Jar Package Using Maven
+Install [Maven](https://maven.apache.org/download.cgi).
+
+Build the jar package.
 
 ```
 mvn package
