@@ -93,3 +93,6 @@ mvn package
 ```
 java -cp target/barcode-1.0.0.jar com.dynamsoft.barcode.Test <image file>
 ```
+
+## Blog
+[How to Package JNI Shared Library into Jar File](https://www.codepool.biz/package-jni-shared-library-jar-file.html)
