@@ -33,13 +33,13 @@ public class NativeLoader {
 			String tempFolder) throws IOException {
 		String[] filenames = null;
 		if (Utils.isWindows()) {
-			filenames = new String[] {"vcomp110.dll", "DynamicPdfx64.dll", "DynamsoftBarcodeReaderx64.dll", "dbr.dll"};
+			filenames = new String[] {"vcomp110.dll", "DynamicPdfx64.dll", "DynamsoftBarcodeReaderx64.dll", "dbr.dll", "DynamsoftLicClientx64.dll", "DynamsoftLicenseClientx64.dll"};
 		}
 		else if (Utils.isLinux()) {
-			filenames = new String[] {"libDynamicPdf.so", "libDynamsoftBarcodeReader.so", "libdbr.so"};
+			filenames = new String[] {"libDynamicPdf.so", "libDynamsoftBarcodeReader.so", "libdbr.so", "libDynamLicenseClient.so", "libDynamsoftLicenseClient.so"};
 		}
 		else if (Utils.isMac()) {
-			filenames = new String[] {"libDynamsoftBarcodeReader.dylib", "libdbr.jnilib"};
+			filenames = new String[] {"libDynamsoftBarcodeReader.dylib", "libdbr.jnilib", "libDynamsoftLicenseClient.dylib", "libDynamicPdf.dylib"};
 		}
 		
 		boolean ret = true;

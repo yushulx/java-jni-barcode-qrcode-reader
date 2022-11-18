@@ -25,6 +25,13 @@ If you don't want to build the jar package by yourself, you can download the [Dy
 ## License Key
 Apply for a [30-day free trial license](https://www.dynamsoft.com/customer/license/trialLicense/?product=dbr).
 
+## JNI Header Generation
+
+```bash
+cd src/main/java
+javah -o ../../../jni/NativeBarcodeReader.h com.dynamsoft.barcode.NativeBarcodeReader
+```
+
 ## Build the JNI Shared Library with CMake
 
 ### Windows
