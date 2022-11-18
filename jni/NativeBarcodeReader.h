@@ -39,6 +39,9 @@ JNIEXPORT void JNICALL Java_com_dynamsoft_barcode_NativeBarcodeReader_nativeDest
 JNIEXPORT void JNICALL Java_com_dynamsoft_barcode_NativeBarcodeReader_nativeDecodeFile
   (JNIEnv *, jobject, jlong, jstring);
 
+JNIEXPORT jstring JNICALL Java_com_dynamsoft_barcode_NativeBarcodeReader_nativeGetVersion
+  (JNIEnv *, jobject);
+
 #ifdef __cplusplus
 }
 #endif

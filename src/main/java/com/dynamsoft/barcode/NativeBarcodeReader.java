@@ -36,6 +36,10 @@ public class NativeBarcodeReader {
 		nativeDecodeFile(nativePtr, fileName);
 	}
 
+	public String getVersion() {
+		return nativeGetVersion();
+	}
+
 	private native int nativeInitLicense(long nativePtr, String license);
 	
 	private native long nativeCreateInstance();
@@ -43,4 +47,6 @@ public class NativeBarcodeReader {
 	private native void nativeDestroyInstance(long nativePtr);
 	
 	private native void nativeDecodeFile(long nativePtr, String fileName);
+
+	private native String nativeGetVersion();
 }

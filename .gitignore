@@ -3,3 +3,4 @@
 *.jnilib
 /src/main/resources
 /src/main/java/com/dynamsoft/barcode/native
+/jni/build

@@ -17,7 +17,9 @@ extern "C"
 
 		if (hBarcode)
 		{
-			DBR_InitLicense((void *)hBarcode, pszLicense);
+			char errorMsgBuffer[512];
+			// Click https://www.dynamsoft.com/customer/license/trialLicense/?product=dbr to get a trial license.
+			DBR_InitLicense(pszLicense, errorMsgBuffer, 512);
 		}
 
 		env->ReleaseStringUTFChars(license, pszLicense);
@@ -61,14 +63,15 @@ extern "C"
 
 			DBR_DecodeFile(hBarcode, pszFileName, "");
 
-			STextResultArray *paryResult = NULL;
+			TextResultArray *paryResult = NULL;
 			DBR_GetAllTextResults(hBarcode, &paryResult);
 
-			int count = paryResult->nResultsCount;
-			int i = 0;
-			for (; i < count; i++)
+			int count = paryResult->resultsCount;
+			for (int index = 0; index < paryResult->resultsCount; index++)
 			{
-				printf("Index: %d, Type: %s, Value: %s\n", i, paryResult->ppResults[i]->pszBarcodeFormatString, paryResult->ppResults[i]->pszBarcodeText); // Add results to list
+				printf("Barcode %d:\n", index + 1);
+				printf("    Type: %s\n", paryResult->results[index]->barcodeFormatString);
+				printf("    Text: %s\n", paryResult->results[index]->barcodeText);
 			}
 
 			// Release memory
@@ -76,6 +79,12 @@ extern "C"
 
 			env->ReleaseStringUTFChars(fileName, pszFileName);
 		}
+	}
+
+	JNIEXPORT jstring JNICALL Java_com_dynamsoft_barcode_NativeBarcodeReader_nativeGetVersion(JNIEnv *env, jobject) 
+	{
+		const char *version = DBR_GetVersion();
+		return env->NewStringUTF(version);
 	}
 
 #ifdef __cplusplus
