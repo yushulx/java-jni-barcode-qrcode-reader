@@ -14,3 +14,6 @@ To build and run the barcode reader, use the following command:
 ```bash
 ./gradlew run --args="<image file> <license file>"
 ```
+
+## Blog
+- [How to Build Desktop Barcode Scanner in Java and Kotlin](https://www.dynamsoft.com/codepool/gradle-java-kotlin-barcode-scanner.html)
