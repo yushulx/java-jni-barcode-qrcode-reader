@@ -1,31 +1,30 @@
-# Barcode Qr Java SDK for Windows, Linux and macOS
-The repository aims to help developers build a cross-platform Java jar package that contains JNI shared libraries (`Windows`, `Linux` and `macOS`) and [Dynamsoft Barcode Reader](https://www.dynamsoft.com/barcode-reader/overview/).
-
-## Dynamsoft Java SDK
-If you don't want to build the jar package by yourself, you can download the [Dynamsoft Java SDK](https://www.dynamsoft.com/Downloads/Dynamic-Barcode-Reader-Download.aspx) directly.
+# Cross-Platform Java Barcode SDK for Windows, Linux and macOS
+This repository provides a simple example demonstrating how to build a cross-platform Java JAR package that encapsulates JNI shared libraries for **Windows**, **Linux**, and **macOS**, binding to the [Dynamsoft C++ Barcode Reader SDK](https://www.dynamsoft.com/barcode-reader/overview/). For using production-ready Java barcode detection API, please download the [official Java Barcode SDK](https://www.dynamsoft.com/barcode-reader/downloads/) directly.
 
 ```xml
 <repositories>
-    <repository>
-        <id>dbr</id>
-        <url>
-        https://download2.dynamsoft.com/maven/dbr/jar
-        </url>
-    </repository>
+    <repository>
+        <id>dbr </id>
+        <url>
+        https://download2.dynamsoft.com/maven/dbr/jar
+        </url>
+    </repository>
 </repositories>
 <dependencies>
-    <dependency>
-        <groupId>com.dynamsoft</groupId>
-        <artifactId>dbr</artifactId>
-        <version>9.4.0</version>
-    </dependency>
+    <dependency>
+        <groupId>com.dynamsoft</groupId>
+        <artifactId>dbr</artifactId>
+        <version>9.6.40.1</version>
+    </dependency>
 </dependencies>
 ```
 
-## License Key
-Apply for a [30-day free trial license](https://www.dynamsoft.com/customer/license/trialLicense/?product=dbr).
+## License Key for Dynamsoft Barcode Reader SDK
+Obtain a [30-day free trial license](https://www.dynamsoft.com/customer/license/trialLicense/).
 
 ## JNI Header Generation
+
+Navigate to your Java source directory and generate the JNI header file:
 
 ```bash
 cd src/main/java
@@ -51,17 +50,23 @@ cmake ..
 cmake --build . --config Release --target install
 ```
 
-## Build the Jar Package Using Maven
+## Build the JAR Package Using Maven
 
 ```
 mvn package
 ```
 
-## Test the Jar Package for Barcode Reading
+## Test the JAR Package for Barcode Reading
+1. Set the license key in `Test.java`:
 
-```
-java -cp target/barcode-1.0.0.jar com.dynamsoft.barcode.Test <image file>
-```
+    ```java
+    barcodeReader.setLicense("LICENSE-KEY");
+    ```
+
+2. Run the test:
+    ```bash
+    java -cp target/barcode-1.0.0.jar Test.java <image file>
+    ```
 
 ## Blog
-[How to Package JNI Shared Library into Jar File](https://www.dynamsoft.com/codepool/package-jni-shared-library-jar-file.html)
+- [How to Package JNI Shared Library into Jar File](https://www.dynamsoft.com/codepool/package-jni-shared-library-jar-file.html)

@@ -2,3 +2,4 @@
 /src/main/java/com/dynamsoft/barcode/native
 /jni/build
 classes
+/target/maven-archiver
