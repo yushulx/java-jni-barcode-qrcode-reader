@@ -14,7 +14,7 @@ BarcodeReader.initLicense("LICENSE-KEY");
     
   ```bash
   mvn clean package
-  java -cp target/test-1.0-SNAPSHOT-jar-with-dependencies.jar com.java.barcode.App ../../../../images/dotcode.png
+  java -jar target/test-1.0-SNAPSHOT-jar-with-dependencies.jar ../../../../images/dotcode.png
   ```
 
 - OpenCV
@@ -30,7 +30,7 @@ BarcodeReader.initLicense("LICENSE-KEY");
   
       ```bash
       mvn clean package
-      java -cp target/test-1.0-SNAPSHOT-jar-with-dependencies.jar com.java.barcode.App
+      java -jar target/test-1.0-SNAPSHOT-jar-with-dependencies.jar
       ```
 
      ![Java DotCode Reader](http://www.dynamsoft.com/codepool/img/2020/04/java-dotcode-reader.png)

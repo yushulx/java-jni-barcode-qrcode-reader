@@ -42,6 +42,11 @@
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
+          <archive>
+            <manifest>
+              <mainClass>com.java.barcode.App</mainClass>
+            </manifest>
+          </archive>
         </configuration>
         <executions>
           <execution>

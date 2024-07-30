@@ -13,7 +13,7 @@ This sample demonstrates how to use the [Dynamsoft Barcode Reader SDK](https://w
 
     ```bash
     mvn clean package
-    java -cp target/test-1.0-SNAPSHOT-jar-with-dependencies.jar com.dynamsoft.App ../../../images/AllSupportedBarcodeTypes.png
+    java -jar target/test-1.0-SNAPSHOT-jar-with-dependencies.jar ../../../images/AllSupportedBarcodeTypes.png
     ```
 
     ![Java barcode and QR code reader](https://www.dynamsoft.com/codepool/img/2022/03/arm64-jetson-nano-java-barcode.png)
