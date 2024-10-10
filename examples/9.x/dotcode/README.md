@@ -2,7 +2,7 @@
 These samples demonstrate how to decode **DotCode** using the [Dynamsoft Barcode Reader SDK](https://www.dynamsoft.com/barcode-reader/downloads/).
 
 ## License Key
-Get a [valid license](https://www.dynamsoft.com/customer/license/trialLicense/) and update the code in `src/main/java/com/java/barcode/App.java`:
+Get a [valid license](https://www.dynamsoft.com/customer/license/trialLicense/?product=dcv&package=cross-platform) and update the code in `src/main/java/com/java/barcode/App.java`:
 
 ```java
 BarcodeReader.initLicense("LICENSE-KEY");

@@ -20,7 +20,7 @@ This repository provides a simple example demonstrating how to build a cross-pla
 ```
 
 ## License Key for Dynamsoft Barcode Reader SDK
-Obtain a [30-day free trial license](https://www.dynamsoft.com/customer/license/trialLicense/).
+Obtain a [30-day free trial license](https://www.dynamsoft.com/customer/license/trialLicense/?product=dcv&package=cross-platform).
 
 ## JNI Header Generation
 

@@ -18,7 +18,7 @@ extern "C"
 		if (hBarcode)
 		{
 			char errorMsgBuffer[512];
-			// Click https://www.dynamsoft.com/customer/license/trialLicense/?product=dbr to get a trial license.
+			// Click https://www.dynamsoft.com/customer/license/trialLicense/?product=dcv&package=cross-platform to get a trial license.
 			DBR_InitLicense(pszLicense, errorMsgBuffer, 512);
 		}
 

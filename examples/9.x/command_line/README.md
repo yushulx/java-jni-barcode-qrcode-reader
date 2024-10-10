@@ -3,7 +3,7 @@
 This sample demonstrates how to use the [Dynamsoft Barcode Reader SDK](https://www.dynamsoft.com/barcode-reader/sdk-desktop-server/) to build a simple Java barcode and QR code reader on **Windows**, **Linux (AMD64 and ARM64)**, and **macOS**.
 
 ## Usage
-1. Obtain a valid [license key](https://www.dynamsoft.com/customer/license/trialLicense) and update the code in `src/main/java/com/dynamsoft/App.java`:
+1. Obtain a valid [license key](https://www.dynamsoft.com/customer/license/trialLicense/?product=dcv&package=cross-platform) and update the code in `src/main/java/com/dynamsoft/App.java`:
 
     ```java
     BarcodeReader.initLicense("LICENSE-KEY");

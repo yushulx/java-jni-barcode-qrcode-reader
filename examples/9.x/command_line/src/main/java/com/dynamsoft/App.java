@@ -19,7 +19,7 @@ public final class App {
         String pszImageFile = filename;
         BarcodeReader br = null;
         try {
-            // Get a license key from https://www.dynamsoft.com/customer/license/trialLicense?product=dbr
+            // Get a license key from https://www.dynamsoft.com/customer/license/trialLicense/?product=dcv&package=cross-platform
             BarcodeReader.initLicense("DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==");
             br = new BarcodeReader();
         } catch (Exception e) {

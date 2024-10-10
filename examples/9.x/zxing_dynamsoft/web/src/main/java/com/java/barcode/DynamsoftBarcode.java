@@ -22,7 +22,7 @@ public class DynamsoftBarcode {
         try {
             LOG.info("Decoding barcodes...");
 
-            // Get a license key from https://www.dynamsoft.com/customer/license/trialLicense?product=dbr
+            // Get a license key from https://www.dynamsoft.com/customer/license/trialLicense/?product=dcv&package=cross-platform
             BarcodeReader.initLicense("LICENSE-KEY");
             BarcodeReader barcodeReader = new BarcodeReader();
             TextResult[] results = barcodeReader.decodeFileInMemory(is, "");

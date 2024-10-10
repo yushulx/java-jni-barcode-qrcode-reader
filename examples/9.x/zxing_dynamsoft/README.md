@@ -26,7 +26,7 @@ To set up your Maven project, configure the `pom.xml` file to include the necess
 ```
 
 ## License Key
-Get a valid [license key](https://www.dynamsoft.com/customer/license/trialLicense?product=dbr) for Dynamsoft Barcode Reader and update your Java code as follows:
+Get a valid [license key](https://www.dynamsoft.com/customer/license/trialLicense/?product=dcv&package=cross-platform) for Dynamsoft Barcode Reader and update your Java code as follows:
 
 ```java
 BarcodeReader.initLicense("LICENSE-KEY");

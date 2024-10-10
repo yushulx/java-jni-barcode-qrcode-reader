@@ -1,7 +1,7 @@
 # ZXing vs Dynamsoft Barcode Reader in Java
 
 ## Usage
-1. Obtain a valid [license key](https://www.dynamsoft.com/customer/license/trialLicense) and update the code in `src/main/java/com/java/barcode/App.java`:
+1. Obtain a valid [license key](https://www.dynamsoft.com/customer/license/trialLicense/?product=dcv&package=cross-platform) and update the code in `src/main/java/com/java/barcode/App.java`:
 
     ```java
     BarcodeReader.initLicense("LICENSE-KEY");

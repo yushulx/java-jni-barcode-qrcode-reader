@@ -2,7 +2,7 @@
 This sample demonstrates how to use Gradle to build and run a simple command-line barcode reader written in Java or Kotlin.
 
 ## License Key
-Get a [30-day FREE trial license](https://www.dynamsoft.com/customer/license/trialLicense/).
+Get a [30-day FREE trial license](https://www.dynamsoft.com/customer/license/trialLicense/?product=dcv&package=cross-platform).
 
 ## Java Barcode SDK Documentation
 
