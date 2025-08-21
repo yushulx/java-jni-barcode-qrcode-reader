@@ -1,0 +1,41 @@
+@PACKAGE_INIT@
+
+# CameraProject CMake Package Configuration File
+# Provides targets for LiteCam camera library
+
+include(CMakeFindDependencyMacro)
+
+# Find required dependencies
+if(@BUILD_SHARED_LIBS@)
+    find_dependency(JNI REQUIRED)
+endif()
+
+# Include the exported targets
+include("${CMAKE_CURRENT_LIST_DIR}/CameraProjectTargets.cmake")
+
+# Set variables for consumers
+set(CameraProject_VERSION @PROJECT_VERSION@)
+set(CameraProject_FOUND TRUE)
+
+# Provide legacy variables for compatibility
+set(CAMERAPROJECT_FOUND ${CameraProject_FOUND})
+set(CAMERAPROJECT_VERSION ${CameraProject_VERSION})
+
+# Check that all requested components are available
+check_required_components(CameraProject)
+
+# Set up include directories
+get_target_property(CameraProject_INCLUDE_DIRS litecam INTERFACE_INCLUDE_DIRECTORIES)
+
+# Provide information about the build configuration
+set(CameraProject_BUILD_TYPE "@CMAKE_BUILD_TYPE@")
+set(CameraProject_PLATFORM "@TARGET_PLATFORM@")
+set(CameraProject_JNI_SUPPORT @JNI_FOUND@)
+
+# Print configuration information (optional)
+if(NOT CameraProject_FIND_QUIETLY)
+    message(STATUS "Found CameraProject ${CameraProject_VERSION}")
+    message(STATUS "  Platform: ${CameraProject_PLATFORM}")
+    message(STATUS "  Build type: ${CameraProject_BUILD_TYPE}")
+    message(STATUS "  JNI support: ${CameraProject_JNI_SUPPORT}")
+endif()
