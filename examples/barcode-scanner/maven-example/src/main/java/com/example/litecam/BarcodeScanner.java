@@ -23,13 +23,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.io.File;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Enhanced LiteCam Barcode Scanner with ZXing integration and visual overlays
@@ -43,13 +36,11 @@ public class BarcodeScanner extends JPanel {
         final String text;
         final BarcodeFormat format;
         final ResultPoint[] resultPoints;
-        final long timestamp;
 
         DetectedBarcode(String text, BarcodeFormat format, ResultPoint[] resultPoints) {
             this.text = text;
             this.format = format;
             this.resultPoints = resultPoints;
-            this.timestamp = System.currentTimeMillis();
         }
     }
 
