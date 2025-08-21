@@ -24,6 +24,19 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.dynamsoft.core.EnumErrorCode;
+import com.dynamsoft.core.EnumImagePixelFormat;
+import com.dynamsoft.cvr.CaptureVisionRouter;
+import com.dynamsoft.cvr.CapturedResult;
+import com.dynamsoft.cvr.EnumPresetTemplate;
+import com.dynamsoft.dbr.BarcodeResultItem;
+import com.dynamsoft.dbr.DecodedBarcodesResult;
+import com.dynamsoft.license.LicenseError;
+import com.dynamsoft.license.LicenseException;
+import com.dynamsoft.license.LicenseManager;
+import com.dynamsoft.core.basic_structures.ImageData;
+import com.dynamsoft.core.basic_structures.Quadrilateral;
+
 /**
  * Enhanced LiteCam Barcode Scanner with ZXing integration and visual overlays
  * Supports both camera and file modes with proper threading architecture
@@ -34,10 +47,10 @@ public class BarcodeScanner extends JPanel {
     // Inner class to hold detected barcode information
     private static class DetectedBarcode {
         final String text;
-        final BarcodeFormat format;
+        final String format;
         final ResultPoint[] resultPoints;
 
-        DetectedBarcode(String text, BarcodeFormat format, ResultPoint[] resultPoints) {
+        DetectedBarcode(String text, String format, ResultPoint[] resultPoints) {
             this.text = text;
             this.format = format;
             this.resultPoints = resultPoints;
@@ -81,6 +94,7 @@ public class BarcodeScanner extends JPanel {
     private Timer frameTimer;
 
     // Barcode detection components
+    private CaptureVisionRouter cvRouter;
     private MultiFormatReader zxingReader;
     private GenericMultipleBarcodeReader multiReader;
     private ScannerType currentScannerType = ScannerType.ZXING;
@@ -139,6 +153,7 @@ public class BarcodeScanner extends JPanel {
     private void initializeBarcodeReaders() {
         // Initialize ZXing
         try {
+            cvRouter = new CaptureVisionRouter();
             zxingReader = new MultiFormatReader();
             multiReader = new GenericMultipleBarcodeReader(zxingReader);
             logger.info("ZXing initialized successfully with multiple barcode support");
@@ -350,15 +365,6 @@ public class BarcodeScanner extends JPanel {
         if (newType != currentScannerType) {
             currentScannerType = newType;
             logger.info("Scanner changed to: {}", currentScannerType);
-
-            if (currentScannerType == ScannerType.DYNAMSOFT) {
-                JOptionPane.showMessageDialog(this,
-                        "Dynamsoft Barcode Reader is not yet implemented.\nCurrently using ZXing.",
-                        "Scanner Not Available", JOptionPane.INFORMATION_MESSAGE);
-                // Reset to ZXing
-                currentScannerType = ScannerType.ZXING;
-                scannerDropdown.setSelectedItem(ScannerType.ZXING);
-            }
         }
     }
 
@@ -533,12 +539,72 @@ public class BarcodeScanner extends JPanel {
             case ZXING:
                 return detectWithZXing(image);
             case DYNAMSOFT:
-                // Placeholder for Dynamsoft - for now, fallback to ZXing
-                logger.warn("Dynamsoft not implemented, falling back to ZXing");
-                return detectWithZXing(image);
+                return detectWithDBR(image);
             default:
                 return detections;
         }
+    }
+
+    private List<DetectedBarcode> detectWithDBR(BufferedImage image) {
+        List<DetectedBarcode> detections = new ArrayList<>();
+
+        if (image == null || cvRouter == null)
+            return detections;
+
+        try {
+            // Convert BufferedImage to byte array for Dynamsoft
+            int width = image.getWidth();
+            int height = image.getHeight();
+
+            // Convert to RGB format
+            BufferedImage rgbImage = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+            Graphics2D g2d = rgbImage.createGraphics();
+            g2d.drawImage(image, 0, 0, null);
+            g2d.dispose();
+
+            // Get byte array from image
+            byte[] imageBytes = ((java.awt.image.DataBufferByte) rgbImage.getRaster().getDataBuffer()).getData();
+
+            // Create ImageData object for Dynamsoft - use reflection to find correct
+            // constructor
+            ImageData imageData = new ImageData(imageBytes, width, height, width * 3, EnumImagePixelFormat.IPF_RGB_888,
+                    0, null);
+
+            // Capture barcodes using ImageData
+            CapturedResult result = cvRouter.capture(imageData, EnumPresetTemplate.PT_READ_BARCODES);
+            DecodedBarcodesResult barcodeResult = result != null ? result.getDecodedBarcodesResult() : null;
+            BarcodeResultItem[] items = barcodeResult != null ? barcodeResult.getItems() : null;
+
+            if (items != null) {
+                for (int i = 0; i < items.length; i++) {
+                    BarcodeResultItem item = items[i];
+
+                    // Convert Dynamsoft location to ZXing ResultPoint format
+                    Quadrilateral location = item.getLocation();
+                    com.dynamsoft.core.basic_structures.Point[] dbrPoints = location.points;
+
+                    // Create ZXing-compatible result points
+                    ResultPoint[] resultPoints = new ResultPoint[dbrPoints.length];
+                    for (int j = 0; j < dbrPoints.length; j++) {
+                        float x = (float) dbrPoints[j].getX();
+                        float y = (float) dbrPoints[j].getY();
+                        resultPoints[j] = new ResultPoint(x, y);
+                    }
+
+                    // Create detection and add to list
+                    DetectedBarcode detection = new DetectedBarcode(
+                            item.getText(),
+                            item.getFormatString(),
+                            resultPoints);
+                    detections.add(detection);
+                }
+            }
+
+        } catch (Exception e) {
+            logger.error("DBR detection failed: {}", e.getMessage());
+        }
+
+        return detections;
     }
 
     private List<DetectedBarcode> detectWithZXing(BufferedImage image) {
@@ -557,7 +623,7 @@ public class BarcodeScanner extends JPanel {
                 for (Result result : results) {
                     DetectedBarcode detection = new DetectedBarcode(
                             result.getText(),
-                            result.getBarcodeFormat(),
+                            result.getBarcodeFormat().toString(),
                             result.getResultPoints());
                     detections.add(detection);
                 }
@@ -573,7 +639,7 @@ public class BarcodeScanner extends JPanel {
                 Result result = zxingReader.decode(bitmap);
                 DetectedBarcode detection = new DetectedBarcode(
                         result.getText(),
-                        result.getBarcodeFormat(),
+                        result.getBarcodeFormat().toString(),
                         result.getResultPoints());
                 detections.add(detection);
             } catch (NotFoundException e) {
@@ -589,8 +655,9 @@ public class BarcodeScanner extends JPanel {
 
     private void updateResultsDisplay(List<DetectedBarcode> detections) {
         for (DetectedBarcode detection : detections) {
-            String barcodeInfo = String.format("[ZXing] %s (%s)",
-                    detection.text, detection.format);
+            String scannerType = currentScannerType == ScannerType.ZXING ? "ZXing" : "Dynamsoft";
+            String barcodeInfo = String.format("[%s] %s (%s)",
+                    scannerType, detection.text, detection.format);
 
             if (!scannedResults.contains(barcodeInfo)) {
                 scannedResults.add(barcodeInfo);
@@ -858,6 +925,25 @@ public class BarcodeScanner extends JPanel {
     }
 
     public static void main(String[] args) {
+        int errorCode = 0;
+        String errorMsg = "";
+
+        try {
+            LicenseError licenseError = LicenseManager.initLicense(
+                    "DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==");
+            if (licenseError.getErrorCode() != EnumErrorCode.EC_OK) {
+                errorCode = licenseError.getErrorCode();
+                errorMsg = licenseError.getErrorString();
+            }
+        } catch (LicenseException e) {
+            errorCode = e.getErrorCode();
+            errorMsg = e.getErrorString();
+        }
+
+        if (errorCode != EnumErrorCode.EC_OK) {
+            System.out.println("License initialization failed: ErrorCode: " + errorCode + ", ErrorString: " + errorMsg);
+        }
+
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("LiteCam Barcode Scanner");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
