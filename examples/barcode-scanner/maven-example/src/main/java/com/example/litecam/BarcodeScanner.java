@@ -60,15 +60,15 @@ public class BarcodeScanner extends JPanel {
 
     // Scanner type enum
     private enum ScannerType {
-        ZXING("ZXing"), 
+        ZXING("ZXing"),
         DYNAMSOFT("Dynamsoft Barcode Reader");
-        
+
         private final String displayName;
-        
+
         ScannerType(String displayName) {
             this.displayName = displayName;
         }
-        
+
         @Override
         public String toString() {
             return displayName;
@@ -122,7 +122,7 @@ public class BarcodeScanner extends JPanel {
     // Current overlay data
     private List<DetectedBarcode> currentOverlayBarcodes = new ArrayList<>();
     private final Object overlayLock = new Object();
-    
+
     // Remember last directory for file chooser
     private File lastDirectory;
 
@@ -210,7 +210,7 @@ public class BarcodeScanner extends JPanel {
 
         // Enable overlay by default
         showOverlay = true;
-        
+
         // Enable drag-and-drop for file mode
         setupDragAndDrop();
     }
@@ -294,7 +294,7 @@ public class BarcodeScanner extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         panel.add(new JLabel("Scanner:"), gbc);
-        
+
         gbc.gridx = 1;
         scannerDropdown = new JComboBox<>(ScannerType.values());
         scannerDropdown.setSelectedItem(currentScannerType);
@@ -359,11 +359,11 @@ public class BarcodeScanner extends JPanel {
         if (newType != currentScannerType) {
             currentScannerType = newType;
             logger.info("Scanner changed to: {}", currentScannerType);
-            
+
             if (currentScannerType == ScannerType.DYNAMSOFT) {
-                JOptionPane.showMessageDialog(this, 
-                    "Dynamsoft Barcode Reader is not yet implemented.\nCurrently using ZXing.", 
-                    "Scanner Not Available", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "Dynamsoft Barcode Reader is not yet implemented.\nCurrently using ZXing.",
+                        "Scanner Not Available", JOptionPane.INFORMATION_MESSAGE);
                 // Reset to ZXing
                 currentScannerType = ScannerType.ZXING;
                 scannerDropdown.setSelectedItem(ScannerType.ZXING);
@@ -377,7 +377,7 @@ public class BarcodeScanner extends JPanel {
             cam.close();
             logger.info("Camera closed when switching to file mode");
         }
-        
+
         currentMode = Mode.FILE;
         switchModeButton.setText("Switch to Camera Mode");
         loadFileButton.setVisible(true);
@@ -400,7 +400,7 @@ public class BarcodeScanner extends JPanel {
                 cam.setResolution(640, 480);
                 logger.info("Camera reopened for camera mode: {}x{}", cam.getWidth(), cam.getHeight());
             }
-            
+
             currentMode = Mode.CAMERA;
             switchModeButton.setText("Switch to File Mode");
             loadFileButton.setVisible(false);
@@ -409,32 +409,33 @@ public class BarcodeScanner extends JPanel {
             clearOverlay();
             repaintCamera();
             updateStatus();
-            
+
             // Restart worker thread for camera mode
             startWorkerThread();
-            
+
         } catch (Exception e) {
             logger.error("Failed to switch to camera mode", e);
-            JOptionPane.showMessageDialog(this, "Camera not available: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Camera not available: " + e.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void loadImageFile(ActionEvent e) {
         JFileChooser fileChooser = new JFileChooser();
-        
+
         // Remember the last directory
         if (lastDirectory != null && lastDirectory.exists()) {
             fileChooser.setCurrentDirectory(lastDirectory);
         }
-        
+
         fileChooser.setFileFilter(new FileNameExtensionFilter("Image files", "jpg", "jpeg", "png", "bmp", "gif"));
 
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            
+
             // Remember the directory for next time
             lastDirectory = selectedFile.getParentFile();
-            
+
             try {
                 fileImage = ImageIO.read(selectedFile);
                 logger.info("Loaded image: {}x{}", fileImage.getWidth(), fileImage.getHeight());
@@ -442,9 +443,15 @@ public class BarcodeScanner extends JPanel {
                 // Perform immediate scan on loaded image and display overlay
                 List<DetectedBarcode> detections = detectBarcodes(fileImage);
 
+                // Update both overlay and latest results for rendering thread
                 synchronized (overlayLock) {
                     currentOverlayBarcodes.clear();
                     currentOverlayBarcodes.addAll(detections);
+                }
+
+                synchronized (resultsLock) {
+                    latestBarcodeResults.clear();
+                    latestBarcodeResults.addAll(detections);
                 }
 
                 updateResultsDisplay(detections);
@@ -482,7 +489,7 @@ public class BarcodeScanner extends JPanel {
                             synchronized (resultsLock) {
                                 latestBarcodeResults = new ArrayList<>(detections);
                             }
-                            
+
                             // Update results display if there are new detections
                             if (!detections.isEmpty()) {
                                 updateResultsDisplay(detections);
@@ -509,7 +516,8 @@ public class BarcodeScanner extends JPanel {
                 currentResults = new ArrayList<>(latestBarcodeResults);
             }
 
-            // Update overlay with current results (even if empty to clear overlay when no barcodes)
+            // Update overlay with current results (even if empty to clear overlay when no
+            // barcodes)
             synchronized (overlayLock) {
                 currentOverlayBarcodes.clear();
                 currentOverlayBarcodes.addAll(currentResults);
@@ -551,7 +559,7 @@ public class BarcodeScanner extends JPanel {
         try {
             LuminanceSource source = new BufferedImageLuminanceSource(image);
             BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-            
+
             // Try to detect multiple barcodes first
             try {
                 Result[] results = multiReader.decodeMultiple(bitmap);
@@ -568,7 +576,7 @@ public class BarcodeScanner extends JPanel {
             } catch (NotFoundException e) {
                 // No multiple barcodes found, try single barcode detection
             }
-            
+
             // Fallback to single barcode detection
             try {
                 Result result = zxingReader.decode(bitmap);
@@ -789,20 +797,20 @@ public class BarcodeScanner extends JPanel {
                 try {
                     dtde.acceptDrop(DnDConstants.ACTION_COPY);
                     Transferable transferable = dtde.getTransferable();
-                    
+
                     if (transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
                         @SuppressWarnings("unchecked")
                         List<File> files = (List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
-                        
+
                         if (!files.isEmpty()) {
                             File file = files.get(0); // Take the first file
                             if (isImageFile(file)) {
                                 loadImageFromFile(file);
                                 dtde.dropComplete(true);
                             } else {
-                                JOptionPane.showMessageDialog(BarcodeScanner.this, 
-                                    "Please drop an image file (jpg, jpeg, png, bmp, gif, tiff)", 
-                                    "Invalid File Type", JOptionPane.WARNING_MESSAGE);
+                                JOptionPane.showMessageDialog(BarcodeScanner.this,
+                                        "Please drop an image file (jpg, jpeg, png, bmp, gif, tiff)",
+                                        "Invalid File Type", JOptionPane.WARNING_MESSAGE);
                                 dtde.dropComplete(false);
                             }
                         } else {
@@ -818,28 +826,34 @@ public class BarcodeScanner extends JPanel {
             }
         });
     }
-    
+
     private boolean isImageFile(File file) {
         String name = file.getName().toLowerCase();
-        return name.endsWith(".jpg") || name.endsWith(".jpeg") || 
-               name.endsWith(".png") || name.endsWith(".bmp") || 
-               name.endsWith(".gif") || name.endsWith(".tiff");
+        return name.endsWith(".jpg") || name.endsWith(".jpeg") ||
+                name.endsWith(".png") || name.endsWith(".bmp") ||
+                name.endsWith(".gif") || name.endsWith(".tiff");
     }
-    
+
     private void loadImageFromFile(File file) {
         try {
             // Remember the directory for next time
             lastDirectory = file.getParentFile();
-            
+
             fileImage = ImageIO.read(file);
             logger.info("Loaded image via drag-and-drop: {}x{}", fileImage.getWidth(), fileImage.getHeight());
 
             // Perform immediate scan on loaded image and display overlay
             List<DetectedBarcode> detections = detectBarcodes(fileImage);
 
+            // Update both overlay and latest results for rendering thread
             synchronized (overlayLock) {
                 currentOverlayBarcodes.clear();
                 currentOverlayBarcodes.addAll(detections);
+            }
+
+            synchronized (resultsLock) {
+                latestBarcodeResults.clear();
+                latestBarcodeResults.addAll(detections);
             }
 
             updateResultsDisplay(detections);
