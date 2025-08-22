@@ -6,7 +6,7 @@ This project provides two main components: a lightweight **Java Camera SDK** for
 - **Java JDK 8+** and **Maven 3.6+**
 - **Camera device** (for scanner application)
 - Platform dependencies: Windows (Visual Studio), Linux (`libx11-dev libv4l-dev`), macOS (Xcode)
-
+- [30-day free trial license](https://www.dynamsoft.com/customer/license/trialLicense/?product=dcv&package=cross-platform) for Dynamsoft Barcode Reader
 
 ## Components
 
