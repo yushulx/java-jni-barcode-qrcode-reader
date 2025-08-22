@@ -2,6 +2,9 @@
 
 This project provides two main components: a lightweight **Java Camera SDK** for cross-platform video capture and a complete **Java Barcode Scanner** application demonstrating real-time barcode detection.
 
+https://github.com/user-attachments/assets/53326c6b-1893-41ee-9f6a-dfe409afdd2d
+
+
 ## Prerequisites
 - **Java JDK 8+** and **Maven 3.6+**
 - **Camera device** (for scanner application)
@@ -23,6 +26,7 @@ Lightweight cross-platform camera capture library with JNI bridge.
 ./run-litecam.sh  # Linux/macOS
 ```
 
+
 **Features:**
 - Cross-platform video capture (Windows/Linux/macOS)
 - Direct RGB frame access via ByteBuffer
@@ -41,6 +45,7 @@ Complete barcode scanning application built with the Camera SDK, Dynamsoft Barco
 .\run.ps1 # Windows
 ./run.sh  # Linux/macOS
 ```
+![Java barcode scanner](https://www.dynamsoft.com/codepool/img/2025/08/java-barcode-scanner-reader.png)
 
 **Features:**
 - Real-time camera scanning with visual overlays
