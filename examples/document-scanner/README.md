@@ -2,6 +2,9 @@
 
 A Java Swing desktop application that uses **LiteCam** for live camera access and the **Dynamsoft Capture Vision SDK (DDN)** for automatic document boundary detection and normalization (deskew/crop).
 
+https://github.com/user-attachments/assets/bd91971e-07c7-4e02-b8bd-46f27097fc80
+
+
 ## Features
 
 - **Live camera mode** — continuously detects the document boundary in real-time and draws the detected quad on the camera feed
@@ -72,3 +75,6 @@ To start in **file-only mode** (no camera required):
 ```bash
 java -jar target/litecam-document-scanner-1.0.0.jar --file
 ```
+
+## Blog
+[How to Build a Live Document Scanner Desktop App in Java with Dynamsoft Capture Vision SDK](https://www.dynamsoft.com/codepool/build-live-document-scanner-desktop-app-java-dynamsoft.html)
